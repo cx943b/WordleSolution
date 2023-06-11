@@ -11,6 +11,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+using Serilog;
 
 namespace WordleSolution
 {
@@ -37,6 +40,25 @@ namespace WordleSolution
                     .AddJsonFile("appsettings.json")
                     .Build();
             });
+            containerRegistry.RegisterSingleton<ILoggerFactory>(prov =>
+            {
+                var config = prov.Resolve<IConfiguration>();
+
+                return LoggerFactory.Create(builder =>
+                {
+                    var logger = new LoggerConfiguration()
+                        .ReadFrom.Configuration(config)
+                        .CreateLogger();
+
+                    builder
+                        .ClearProviders()
+                        .AddSerilog(logger)
+                        .AddDebug();
+                });
+            });
+            containerRegistry.Register(typeof(ILogger<>), typeof(Logger<>));
+
+
             containerRegistry.RegisterSingleton<IWordleService, WordleService>();
         }
     }

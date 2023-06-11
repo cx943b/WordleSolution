@@ -17,8 +17,9 @@ namespace WordleSolution
         string[]? _words;
         string? _selectedWord;
 
-        public WordleService(IConfiguration config)
+        public WordleService(ILogger<WordleService> logger, IConfiguration config)
         {
+            _logger = logger;
             _config = config;
         }
 
@@ -56,5 +57,6 @@ namespace WordleSolution
     public interface IWordleService
     {
         Task<bool> InitializeAsync();
+        bool SelectWord();
     }
 }
