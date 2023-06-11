@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WordleSolution.Models;
 
 namespace WordleSolution
 {
@@ -43,6 +44,33 @@ namespace WordleSolution
 
             int selectionIndex = _rand.Next(_words.Length);
             _selectedWord = _words[selectionIndex];
+
+            return true;
+        }
+        public bool AskWord(IEnumerable<AskModel> askModels)
+        {
+            if (_words is null)
+            {
+                _logger.Log(LogLevel.Error, "NotInitialized");
+                return false;
+            }
+            if (_selectedWord is null)
+            {
+                _logger.Log(LogLevel.Error, "Word NotSelected");
+                return false;
+            }
+
+            foreach ((char currentCh, AskModel currentAsk) in _selectedWord.Zip(askModels))
+            {
+                if (currentCh == currentAsk.Character)
+                {
+                    currentAsk.IsCurrected = true;
+                }
+                else if (_selectedWord.IndexOf(currentAsk.Character, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    currentAsk.IsExisted = true;
+                }
+            }
 
             return true;
         }
