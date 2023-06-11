@@ -2,7 +2,6 @@
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using Prism.Unity;
 
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,13 @@ namespace WordleSolution
     /// </summary>
     public partial class App : PrismApplication
     {
+        protected override async void InitializeShell(Window shell)
+        {
+            base.InitializeShell(shell);
+
+            var wordleSvc = Container.Resolve<IWordleService>();
+            await wordleSvc.InitializeAsync();
+        }
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -31,6 +37,7 @@ namespace WordleSolution
                     .AddJsonFile("appsettings.json")
                     .Build();
             });
+            containerRegistry.RegisterSingleton<IWordleService, WordleService>();
         }
     }
 }
