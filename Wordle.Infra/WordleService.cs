@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WordleSolution.Models;
 
-namespace WordleSolution
+namespace Wordle.Infra
 {
     public class WordleService : IWordleService
     {

@@ -13,9 +13,10 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using Wordle.Infra;
 using Serilog;
 
-namespace WordleSolution
+namespace Wordle
 {
     /// <summary>
     /// Interaction logic for App.xaml

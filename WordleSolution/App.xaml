@@ -1,7 +1,7 @@
-﻿<prism:PrismApplication x:Class="WordleSolution.App"
+﻿<prism:PrismApplication x:Class="Wordle.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WordleSolution"
+             xmlns:local="clr-namespace:Wordle"
              xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
          
