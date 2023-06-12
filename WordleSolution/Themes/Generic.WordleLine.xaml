@@ -18,6 +18,7 @@
                     <Setter Property="BorderBrush" Value="DimGray"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="Background" Value="White"/>
+                    <Setter Property="IsInputTarget" Value="{Binding IsInputTarget}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type localCtrl:WordleLineItem}">

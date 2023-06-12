@@ -10,9 +10,15 @@ namespace WordleSolution.Models
     public class AskModel : BindableBase
     {
         char _Character;
+        bool _IsInputTarget;
         bool _IsExisted;
         bool _IsCurrected;
 
+        public bool IsInputTarget
+        {
+            get => _IsInputTarget;
+            set => SetProperty(ref _IsInputTarget, value);
+        }
         public char Character
         {
             get => _Character;
