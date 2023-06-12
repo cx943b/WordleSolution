@@ -8,11 +8,11 @@ using System.Windows.Controls;
 
 namespace Wordle.Controls
 {
-    public class WordleLine : ItemsControl
+    public class WordleLineItemsControl : ItemsControl
     {
-        static WordleLine()
+        static WordleLineItemsControl()
         {
-            DefaultStyleKeyProperty.AddOwner(typeof(WordleLine));
+            DefaultStyleKeyProperty.AddOwner(typeof(WordleLineItemsControl));
         }
     }
 }

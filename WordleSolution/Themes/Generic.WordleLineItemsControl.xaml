@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
                     xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
-    <Style TargetType="{x:Type localCtrl:WordleLine}">
+    <Style TargetType="{x:Type localCtrl:WordleLineItemsControl}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type localCtrl:WordleLine}">
+                <ControlTemplate TargetType="{x:Type localCtrl:WordleLineItemsControl}">
                     <Border>
                         <ItemsPresenter/>
                     </Border>
