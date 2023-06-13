@@ -26,6 +26,11 @@ namespace Wordle
                     foreach (UIElement child in e.NewItems!)
                         regionTarget.Children.Add(child);
                 }
+                else if(e.Action == NotifyCollectionChangedAction.Remove)
+                {
+                    foreach (UIElement child in e.OldItems!)
+                        regionTarget.Children.Remove(child);
+                }
             };
         }
 
