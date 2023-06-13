@@ -29,7 +29,11 @@ namespace Wordle
 
             var wordleSvc = Container.Resolve<IWordleService>();
             await wordleSvc.InitializeAsync();
+
+            IRegionManager regionMgr = Container.Resolve<IRegionManager>();
+            regionMgr.RegisterViewWithRegion(WellknownRegionNames.MainViewRegion, typeof(Views.MainView));
         }
+        
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
