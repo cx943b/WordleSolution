@@ -2,11 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
                     xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
-    <Style TargetType="{x:Type localCtrl:WordleLine}">
+
+    <Style x:Key="{x:Type localCtrl:WordleLine}" TargetType="{x:Type localCtrl:WordleLine}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type localCtrl:WordleLine}">
-                    <Border>
+                    <Border Padding="4">
                         <ItemsPresenter/>
                     </Border>
                 </ControlTemplate>
@@ -15,6 +16,9 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type localCtrl:WordleLineItem}">
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="Width" Value="60"/>
+                    <Setter Property="Height" Value="60"/>
                     <Setter Property="BorderBrush" Value="DimGray"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="Background" Value="White"/>
@@ -36,8 +40,15 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate DataType="{x:Type wordleInfraModel:AskModel}">
-                    <TextBlock Text="{Binding Character}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Character}" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
     </Style>

@@ -9,7 +9,7 @@ namespace WordleSolution.Models
 {
     public class AskModel : BindableBase
     {
-        char _Character;
+        char _Character = '_';
         bool _IsInputTarget;
         bool _IsExisted;
         bool _IsCurrected;
@@ -26,12 +26,12 @@ namespace WordleSolution.Models
         }
         public bool IsExisted
         {
-            get => IsExisted;
+            get => _IsExisted;
             set => SetProperty(ref _IsExisted, value);
         }
         public bool IsCurrected
         {
-            get => IsCurrected;
+            get => _IsCurrected;
             set => SetProperty(ref _IsCurrected, value);
         }
     }

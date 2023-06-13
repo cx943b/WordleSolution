@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 using Wordle.Infra;
 using Serilog;
+using Wordle.Views;
+using Wordle.Controls;
+using Wordle.ViewModels;
 
 namespace Wordle
 {
@@ -30,10 +33,24 @@ namespace Wordle
             var wordleSvc = Container.Resolve<IWordleService>();
             await wordleSvc.InitializeAsync();
 
+            wordleSvc.SelectWord();
+
             IRegionManager regionMgr = Container.Resolve<IRegionManager>();
-            regionMgr.RegisterViewWithRegion(WellknownRegionNames.MainViewRegion, typeof(Views.MainView));
+            regionMgr.RegisterViewWithRegion(WellknownRegionNames.MainViewRegion, typeof(MainView));
+
+            // ForTest
+            WordleLineView wordleLineView = Container.Resolve<WordleLineView>();
+            IRegion wordleLinesRegion = regionMgr.Regions[WellknownRegionNames.WordleLinesRegion];
+            wordleLinesRegion.Add(wordleLineView);
+
+            WordleLineViewModel wlViewModel = (WordleLineViewModel)wordleLineView.DataContext;
+            wlViewModel.PushCharacter('A');
+            // ForTest
+
+
+
         }
-        
+
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -65,6 +82,12 @@ namespace Wordle
 
 
             containerRegistry.RegisterSingleton<IWordleService, WordleService>();
+        }
+
+        protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+        {
+            base.ConfigureRegionAdapterMappings(regionAdapterMappings);
+            regionAdapterMappings.RegisterMapping<WordleLineStackPanel>(Container.Resolve<WordleLineStackPanelRegionAdapter>());
         }
     }
 }

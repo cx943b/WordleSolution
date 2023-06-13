@@ -18,6 +18,8 @@ namespace Wordle.Infra
         string[]? _words;
         string? _selectedWord;
 
+        public int SelectedWordLength => _selectedWord?.Length ?? 0;
+
         public WordleService(ILogger<WordleService> logger, IConfiguration config)
         {
             _logger = logger;
@@ -84,6 +86,8 @@ namespace Wordle.Infra
 
     public interface IWordleService
     {
+        int SelectedWordLength { get; }
+
         Task<bool> InitializeAsync();
         bool SelectWord();
     }
