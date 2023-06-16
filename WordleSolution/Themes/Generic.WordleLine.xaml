@@ -4,10 +4,14 @@
                     xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
 
     <Style x:Key="{x:Type localCtrl:WordleLine}" TargetType="{x:Type localCtrl:WordleLine}">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Margin" Value="8"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type localCtrl:WordleLine}">
-                    <Border Padding="4">
+                    <Border CornerRadius="4" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
                         <ItemsPresenter/>
                     </Border>
                 </ControlTemplate>
@@ -51,5 +55,10 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsTargetLine" Value="True">
+                <Setter Property="Background" Value="Beige"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

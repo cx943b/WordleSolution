@@ -19,7 +19,5 @@ namespace Wordle.Controls
         // Using a DependencyProperty as the backing store for IsInputTarget.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsInputTargetProperty =
             DependencyProperty.Register("IsInputTarget", typeof(bool), typeof(WordleLineItem), new UIPropertyMetadata(false));
-
-
     }
 }

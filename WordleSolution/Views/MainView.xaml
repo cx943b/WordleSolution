@@ -9,7 +9,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-        <localCtrl:WordleLineStackPanel prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
-    </Grid>
+    
+    <DockPanel LastChildFill="True">
+        <Button Content="Start" Padding="4 12" DockPanel.Dock="Bottom"/>
+        <localCtrl:WordleLineStackPanel DockPanel.Dock="Top" prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
+    </DockPanel>
 </UserControl>

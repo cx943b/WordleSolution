@@ -34,6 +34,6 @@ namespace Wordle
             };
         }
 
-        protected override IRegion CreateRegion() => new AllActiveRegion();
+        protected override IRegion CreateRegion() => new SingleActiveRegion();
     }
 }

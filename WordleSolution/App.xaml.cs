@@ -13,7 +13,6 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-using Wordle.Infra;
 using Serilog;
 using Wordle.Views;
 using Wordle.Controls;
@@ -26,32 +25,18 @@ namespace Wordle
     /// </summary>
     public partial class App : PrismApplication
     {
+        protected override Window CreateShell() => Container.Resolve<MainWindow>();
         protected override async void InitializeShell(Window shell)
         {
             base.InitializeShell(shell);
 
-            var wordleSvc = Container.Resolve<IWordleService>();
-            await wordleSvc.InitializeAsync();
-
-            wordleSvc.SelectWord();
-
             IRegionManager regionMgr = Container.Resolve<IRegionManager>();
-            regionMgr.RegisterViewWithRegion(WellknownRegionNames.MainViewRegion, typeof(MainView));
+            regionMgr.RegisterViewWithRegion<MainView>(WellknownRegionNames.MainViewRegion);
 
-            // ForTest
-            WordleLineView wordleLineView = Container.Resolve<WordleLineView>();
-            IRegion wordleLinesRegion = regionMgr.Regions[WellknownRegionNames.WordleLinesRegion];
-            wordleLinesRegion.Add(wordleLineView);
-
-            WordleLineViewModel wlViewModel = (WordleLineViewModel)wordleLineView.DataContext;
-            wlViewModel.PushCharacter('A');
-            // ForTest
-
-
-
+            IWordleService wordleSvc = Container.Resolve<WordleService>();
+            await wordleSvc.InitializeAsync();
+            wordleSvc.Start();
         }
-
-        protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {

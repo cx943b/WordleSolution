@@ -6,39 +6,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wordle.Infra;
 using WordleSolution.Models;
 
 namespace Wordle.ViewModels
 {
-    internal class WordleLineViewModel : BindableBase, IWordleLine
+    internal class WordleLineViewModel : BindableBase, INavigationAware
     {
+        public const string NavParamName = "LineIndex";
         readonly ILogger<WordleLineViewModel> _logger;
-        readonly IWordleService _wordleSvc;
 
-        readonly AskModel[] _askModels;
+        int _lineIndex;
+        bool _IsTargetLine;
+        AskModel[] _AskModels;
 
-        public IEnumerable<AskModel> AskModels => _askModels;
+        public bool IsTargetLine
+        {
+            get => _IsTargetLine;
+            set => SetProperty(ref _IsTargetLine, value);
+        }
+        internal int LineIndex { get; set; }
+        public AskModel[] AskModels
+        {
+            get => _AskModels;
+            internal set => SetProperty(ref _AskModels, value);
+        }
 
-        public WordleLineViewModel(ILogger<WordleLineViewModel> logger ,IWordleService wordleSvc)
+        public WordleLineViewModel(ILogger<WordleLineViewModel> logger)
         {
             _logger = logger;
-            _wordleSvc = wordleSvc;
-
-            if(_wordleSvc.SelectedWordLength == 0)
-            {
-                string exMsg = "NotSelectedWord";
-
-                _logger.Log(LogLevel.Error, exMsg);
-                throw new NullReferenceException(exMsg);
-            }
-
-            _askModels = Enumerable.Range(0, _wordleSvc.SelectedWordLength).Select(i => new AskModel()).ToArray();
         }
 
         public void PullCharacter()
         {
-            AskModel? targetModel = _askModels.LastOrDefault (am => am.Character != '_');
+            AskModel? targetModel = AskModels.LastOrDefault (am => am.Character != '_');
             if (targetModel is not null)
                 targetModel.Character = ' ';
         }
@@ -47,13 +47,25 @@ namespace Wordle.ViewModels
         {
             if(!Char.IsLetter(character))
             {
-                _logger.Log(LogLevel.Warning, "PushCharacter was not Letter");
+                _logger.Log(LogLevel.Warning, $"NotLetter: {nameof(character)}");
                 return;
             }
 
-            AskModel? targetModel = _askModels.FirstOrDefault(am => am.Character == '_');
-            if(targetModel is not null)
-                targetModel.Character = character;
+            AskModel? targetModel = AskModels.FirstOrDefault(am => am.Character == '_');
+            if (targetModel is not null)
+                targetModel.Character = Char.ToUpper(character);
         }
+
+        #region INavigationAware
+        public void OnNavigatedTo(NavigationContext navigationContext) => IsTargetLine = true;
+        public void OnNavigatedFrom(NavigationContext navigationContext) => IsTargetLine = false;
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            if (navigationContext.Parameters.TryGetValue(WordleLineViewModel.NavParamName, out int lineIndex))
+                return LineIndex == lineIndex;
+
+            return false;
+        }
+        #endregion
     }
 }

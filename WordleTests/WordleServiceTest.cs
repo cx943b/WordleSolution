@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wordle;
+using Wordle.ViewModels;
+using Wordle.Views;
 using WordleSolution;
 using WordleSolution.Models;
 
@@ -39,15 +42,23 @@ namespace WordleTests
             });
         }
 
+        [TestMethod]
         public async Task AskWord()
         {
-            IWordleService wordleSvc = new WordleService(_loggerFac.CreateLogger<WordleService>(), _config);
+            IWordleService wordleSvc = new WordleService(_loggerFac.CreateLogger<WordleService>(), _config, null, null);
+            
             bool isInit = await wordleSvc.InitializeAsync();
-
             Assert.IsTrue(isInit);
 
-            bool isSelected = wordleSvc.SelectWord();
-            Assert.IsTrue(isSelected);
+            bool isStarted = wordleSvc.Start();
+            Assert.IsTrue(isStarted);
+
+            WordleLineViewModel wordleLineVM = new WordleLineViewModel(_loggerFac.CreateLogger<WordleLineViewModel>());
+            wordleLineVM.PushCharacter('t');
+            wordleLineVM.PushCharacter('r');
+            wordleLineVM.PushCharacter('u');
+            wordleLineVM.PushCharacter('y');
+            wordleLineVM.PushCharacter('t');
         }
     }
 }
