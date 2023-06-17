@@ -10,14 +10,13 @@ using WordleSolution.Models;
 
 namespace Wordle.ViewModels
 {
-    internal class WordleLineViewModel : BindableBase, INavigationAware
+    internal class WordleLineViewModel : BindableBase, INavigationAware, IWordleLine
     {
         public const string NavParamName = "LineIndex";
         readonly ILogger<WordleLineViewModel> _logger;
 
-        int _lineIndex;
         bool _IsTargetLine;
-        AskModel[] _AskModels;
+        IEnumerable<AskModel> _AskModels = Enumerable.Empty<AskModel>().ToArray();
 
         public bool IsTargetLine
         {
@@ -25,7 +24,7 @@ namespace Wordle.ViewModels
             set => SetProperty(ref _IsTargetLine, value);
         }
         internal int LineIndex { get; set; }
-        public AskModel[] AskModels
+        public IEnumerable<AskModel> AskModels
         {
             get => _AskModels;
             internal set => SetProperty(ref _AskModels, value);
@@ -40,7 +39,7 @@ namespace Wordle.ViewModels
         {
             AskModel? targetModel = AskModels.LastOrDefault (am => am.Character != '_');
             if (targetModel is not null)
-                targetModel.Character = ' ';
+                targetModel.Character = '_';
         }
 
         public void PushCharacter(char character)

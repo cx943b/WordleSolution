@@ -33,7 +33,7 @@ namespace Wordle
             IRegionManager regionMgr = Container.Resolve<IRegionManager>();
             regionMgr.RegisterViewWithRegion<MainView>(WellknownRegionNames.MainViewRegion);
 
-            IWordleService wordleSvc = Container.Resolve<WordleService>();
+            IWordleService wordleSvc = Container.Resolve<IWordleService>();
             await wordleSvc.InitializeAsync();
             wordleSvc.Start();
         }

@@ -29,7 +29,6 @@ namespace Wordle
 
         string[]? _words;
         string? _selectedWord;
-        AskModel[]? _currentAskModels;
 
 
         public WordleService(ILogger<WordleService> logger, IConfiguration config, IRegionManager regionMgr, IContainerProvider containerProv)
@@ -55,7 +54,7 @@ namespace Wordle
 
         public bool Start()
         {
-            //_wordleLinesRegion.RemoveAll();
+            _wordleLinesRegion.RemoveAll();
 
             bool isWordSelected = selectWord();
             if (!isWordSelected)
@@ -65,21 +64,41 @@ namespace Wordle
             }
 
             addWordleLine();
-            addWordleLine();
-            //addWordleLine();
-            //addWordleLine();
-            //addWordleLine();
-
             return true;
         }
-        public AskResult AskWord()
+        public void AskWord()
+        {
+            AskResult askResult = askWord();
+
+            if (askResult == AskResult.WaitNext)
+                addWordleLine();
+        }
+
+        public void WriteChar(char ch)
+        {
+            var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
+            activeWordleLineView?.PushCharacter(ch);
+        }
+        public void EraseChar()
+        {
+            var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
+            activeWordleLineView?.PullCharacter();
+        }
+
+        private AskResult askWord()
         {
             if (_words is null)
                 throw new NullReferenceException(nameof(_words));
             if (_selectedWord is null)
                 throw new NullReferenceException(nameof(_selectedWord));
 
-            foreach ((char currentCh, AskModel currentAsk) in _selectedWord.Zip(_currentAskModels!))
+            IWordleLine? wordleLine = _wordleLinesRegion.ActiveViews.LastOrDefault() as IWordleLine;
+            if (wordleLine is null)
+                throw new NullReferenceException(nameof(wordleLine));
+
+            IEnumerable<AskModel> askModels = wordleLine.AskModels;
+
+            foreach ((char currentCh, AskModel currentAsk) in _selectedWord.Zip(askModels))
             {
                 if (currentCh == currentAsk.Character)
                 {
@@ -91,7 +110,7 @@ namespace Wordle
                 }
             }
 
-            if (_currentAskModels!.Any(am => !am.IsCurrected))
+            if (askModels.Any(am => !am.IsCurrected))
             {
                 if (_wordleLinesRegion.Views.Count() == MaxAskCount)
                     return AskResult.CountOver;
@@ -102,7 +121,6 @@ namespace Wordle
 
             return AskResult.Currect;
         }
-
         private bool loadWords()
         {
             _words = _config.GetSection("Words").Get<string[]>();
@@ -119,32 +137,29 @@ namespace Wordle
             }
 
             int selectionIndex = _rand.Next(_words.Length);
-            _selectedWord = _words[selectionIndex].ToLower();
+            _selectedWord = _words[selectionIndex].ToUpper();
 
             return true;
         }
-
         private void addWordleLine()
         {
-            var newWordleLine = createWordleLine(out _currentAskModels);
-            NavigationParameters navParams = new NavigationParameters();
-            navParams.Add(WordleLineViewModel.NavParamName, _wordleLinesRegion.Views.Count());
+            var newWordleLine = createWordleLine();
+            NavigationParameters navParams = new NavigationParameters
+            {
+                { WordleLineViewModel.NavParamName, _wordleLinesRegion.Views.Count() }
+            };
 
             _wordleLinesRegion.Add(newWordleLine);
             _regionMgr.RequestNavigate(WellknownRegionNames.WordleLinesRegion, nameof(WordleLineView), navParams);
 
             _wordleLinesRegion.Activate(newWordleLine);
         }
-
-
-        private WordleLineView createWordleLine(out AskModel[] targetAskModels)
+        private WordleLineView createWordleLine()
         {
-            targetAskModels = Enumerable.Range(0, _selectedWord!.Length).Select(i => new AskModel()).ToArray();
-
             var view =_containerProv.Resolve<WordleLineView>();
             var vm = (WordleLineViewModel)view.DataContext;
 
-            vm.AskModels = targetAskModels;
+            vm.AskModels = Enumerable.Range(0, _selectedWord!.Length).Select(i => new AskModel()).ToArray();
             vm.LineIndex = _wordleLinesRegion.Views.Count();
 
             return view;
@@ -153,8 +168,10 @@ namespace Wordle
 
     public interface IWordleService
     {
-        AskResult AskWord();
+        void AskWord();
+        void EraseChar();
         Task<bool> InitializeAsync();
         bool Start();
+        void WriteChar(char ch);
     }
 }

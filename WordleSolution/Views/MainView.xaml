@@ -6,9 +6,16 @@
              xmlns:local="clr-namespace:Wordle"
              xmlns:localCtrl="clr-namespace:Wordle.Controls"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="KeyDown">
+            <i:InvokeCommandAction Command="{Binding KeyDownCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     
     <DockPanel LastChildFill="True">
         <Button Content="Start" Padding="4 12" DockPanel.Dock="Bottom"/>
