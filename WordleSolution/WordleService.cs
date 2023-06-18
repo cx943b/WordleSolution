@@ -71,7 +71,19 @@ namespace Wordle
             AskResult askResult = askWord();
 
             if (askResult == AskResult.WaitNext)
-                addWordleLine();
+            {
+                if(_wordleLinesRegion.Views.Count() >= MaxAskCount)
+                {
+
+                }
+                else
+                {
+                    addWordleLine();
+                }
+            }
+                
+
+
         }
 
         public void WriteChar(char ch)
