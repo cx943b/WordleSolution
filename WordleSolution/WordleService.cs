@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -15,28 +16,33 @@ using WordleSolution.Models;
 
 namespace Wordle
 {
-    public enum AskResult { Currect, WaitNext, CountOver }
+    
     public class WordleService : IWordleService
     {
         const int MaxAskCount = 5;
 
         readonly Random _rand= new Random();
         readonly IConfiguration _config;
-        private readonly IRegionManager _regionMgr;
+        readonly IRegionManager _regionMgr;
         readonly IContainerProvider _containerProv;
         readonly ILogger _logger;
-        IRegion _wordleLinesRegion;
+
+        readonly GameStatusChangedEvent _gameStatusChangedEvent;
+
+        IRegion? _wordleLinesRegion;
 
         string[]? _words;
         string? _selectedWord;
 
 
-        public WordleService(ILogger<WordleService> logger, IConfiguration config, IRegionManager regionMgr, IContainerProvider containerProv)
+        public WordleService(ILogger<WordleService> logger, IConfiguration config, IRegionManager regionMgr, IEventAggregator eventAggregator, IContainerProvider containerProv)
         {
             _logger = logger;
             _config = config;
             _regionMgr = regionMgr;
             _containerProv = containerProv;
+
+            _gameStatusChangedEvent = eventAggregator.GetEvent<GameStatusChangedEvent>();
         }
 
         public async Task<bool> InitializeAsync()
@@ -44,9 +50,15 @@ namespace Wordle
             Task<bool>[] initTasks = new Task<bool>[]
             {
                 Task.Run(loadWords)
+                // Etc.
             };
 
             _wordleLinesRegion = _regionMgr.Regions[WellknownRegionNames.WordleLinesRegion];
+            if (_wordleLinesRegion is null)
+            {
+                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
+                return false;
+            }
 
             bool[] initResults = await Task.WhenAll(initTasks);
             return initResults.All(b => b);
@@ -54,49 +66,104 @@ namespace Wordle
 
         public bool Start()
         {
-            _wordleLinesRegion.RemoveAll();
-
-            bool isWordSelected = selectWord();
-            if (!isWordSelected)
+            if (_wordleLinesRegion is null)
             {
-                _logger.Log(LogLevel.Error, "CantSelectSord");
+                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
                 return false;
             }
 
-            addWordleLine();
+            _wordleLinesRegion.RemoveAll();
+
+            try
+            {
+                selectWord();
+                addWordleLine();
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex.Message);
+                return false;
+            }
+            
+            _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.Gaming, AskResult.WaitNext));
+
             return true;
         }
-        public void AskWord()
+        public bool AskWord()
         {
-            AskResult askResult = askWord();
+            AskResult askResult = AskResult.Fail;
 
-            if (askResult == AskResult.WaitNext)
+            try
             {
-                if(_wordleLinesRegion.Views.Count() >= MaxAskCount)
-                {
-
-                }
-                else
-                {
-                    addWordleLine();
-                }
+                askResult = askWord();
             }
-                
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex.Message);
+                return false;
+            }
 
+            switch(askResult)
+            {
+                case AskResult.CountOver:
+                    _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.GameOver, askResult));
+                    break;
+                case AskResult.Currect:
+                    _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.GameOver, askResult));
+                    break;
+                case AskResult.WaitNext:
+                    _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.Gaming, askResult));
+                    break;
+            }
 
+            return askResult is not AskResult.Fail;
         }
-
-        public void WriteChar(char ch)
+        public void Surrender()
         {
-            var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
-            activeWordleLineView?.PushCharacter(ch);
+
         }
-        public void EraseChar()
+        public bool WriteChar(char ch)
         {
+            if (_wordleLinesRegion is null)
+            {
+                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
+                return false;
+            }
+
             var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
-            activeWordleLineView?.PullCharacter();
+            if(activeWordleLineView is not null)
+            {
+                activeWordleLineView?.PushCharacter(ch);
+                return true;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, $"NullRef: {activeWordleLineView}");
+                return false;
+            }
+        }
+        public bool EraseChar()
+        {
+            if (_wordleLinesRegion is null)
+            {
+                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
+                return false;
+            }
+
+            var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
+            if (activeWordleLineView is not null)
+            {
+                activeWordleLineView?.PullCharacter();
+                return true;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, $"NullRef: {activeWordleLineView}");
+                return false;
+            }
         }
 
+        /// <exception cref="NullReferenceException"></exception>
         private AskResult askWord()
         {
             if (_words is null)
@@ -135,26 +202,28 @@ namespace Wordle
         }
         private bool loadWords()
         {
-            _words = _config.GetSection("Words").Get<string[]>();
+            _words = _config.GetSection("Words")?.Get<string[]>();
             return _words != null;
         }
-        private bool selectWord()
+
+        /// <exception cref="NullReferenceException"></exception>
+        private void selectWord()
         {
             _selectedWord = null;
 
             if (_words is null)
-            {
-                _logger.Log(LogLevel.Error, "NotInitialized");
-                return false;
-            }
+                throw new NullReferenceException(nameof(_words));
 
             int selectionIndex = _rand.Next(_words.Length);
             _selectedWord = _words[selectionIndex].ToUpper();
-
-            return true;
         }
+
+        /// <exception cref="NullReferenceException"></exception>
         private void addWordleLine()
         {
+            if (_wordleLinesRegion is null)
+                throw new NullReferenceException(nameof(_wordleLinesRegion));
+
             var newWordleLine = createWordleLine();
             NavigationParameters navParams = new NavigationParameters
             {
@@ -166,24 +235,22 @@ namespace Wordle
 
             _wordleLinesRegion.Activate(newWordleLine);
         }
+
+        /// <exception cref="NullReferenceException"></exception>
         private WordleLineView createWordleLine()
         {
+            if (_wordleLinesRegion is null)
+                throw new NullReferenceException(nameof(_wordleLinesRegion));
+            if (_selectedWord is null)
+                throw new NullReferenceException(nameof(_selectedWord));
+
             var view =_containerProv.Resolve<WordleLineView>();
             var vm = (WordleLineViewModel)view.DataContext;
 
-            vm.AskModels = Enumerable.Range(0, _selectedWord!.Length).Select(i => new AskModel()).ToArray();
+            vm.AskModels = Enumerable.Range(0, _selectedWord.Length).Select(i => new AskModel()).ToArray();
             vm.LineIndex = _wordleLinesRegion.Views.Count();
 
             return view;
         }
-    }
-
-    public interface IWordleService
-    {
-        void AskWord();
-        void EraseChar();
-        Task<bool> InitializeAsync();
-        bool Start();
-        void WriteChar(char ch);
     }
 }

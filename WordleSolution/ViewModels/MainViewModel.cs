@@ -18,6 +18,14 @@ namespace Wordle.ViewModels
         readonly SubscriptionToken _gameStatusChangedEventSubToken;
         readonly IWordleService _wordleSvc;
 
+        GameStatus _GameStatus = GameStatus.StandBy;
+
+        public GameStatus GameStatus
+        {
+            get => _GameStatus;
+            set => SetProperty(ref _GameStatus, value);
+        }
+
         public MainViewModel(IEventAggregator eventAggregator, IWordleService wordleSvc)
         {
             _gameStatusChangedEventSubToken = eventAggregator.GetEvent<GameStatusChangedEvent>().Subscribe(onGameStatusChanged);
@@ -30,7 +38,7 @@ namespace Wordle.ViewModels
         }
 
         public void Start() => _wordleSvc.Start();
-        public void Restart()
+        public void Surrender()
         {
 
         }

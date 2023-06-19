@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 namespace Wordle
 {
+    public enum AskResult { Currect, WaitNext, CountOver, Fail }
     public enum GameStatus { StandBy, Gaming, GameOver}
 }

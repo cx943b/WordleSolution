@@ -12,10 +12,12 @@ namespace Wordle
     public class GameStatusChangedEventArgs : EventArgs
     {
         public GameStatus Status { get; init; }
+        public AskResult AskResult { get; init; }
 
-        public GameStatusChangedEventArgs(GameStatus status)
+        public GameStatusChangedEventArgs(GameStatus status, AskResult askResult)
         {
             Status = status;
+            AskResult = askResult;
         }
     }
 }
