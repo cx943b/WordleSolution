@@ -17,19 +17,23 @@ namespace Wordle.ViewModels
     {
         readonly SubscriptionToken _gameStatusChangedEventSubToken;
         readonly IWordleService _wordleSvc;
+        readonly DelegateCommand _StartCommand;
 
-        GameStatus _GameStatus = GameStatus.StandBy;
+        string _btnTitle = "GameStart";
 
-        public GameStatus GameStatus
+        public string ButtonTitle
         {
-            get => _GameStatus;
-            set => SetProperty(ref _GameStatus, value);
+            get => _btnTitle;
+            set => SetProperty(ref _btnTitle, value);
         }
+        public ICommand StartCommand => _StartCommand;
 
         public MainViewModel(IEventAggregator eventAggregator, IWordleService wordleSvc)
         {
             _gameStatusChangedEventSubToken = eventAggregator.GetEvent<GameStatusChangedEvent>().Subscribe(onGameStatusChanged);
             _wordleSvc = wordleSvc;
+
+            _StartCommand = new DelegateCommand(onStartCommandExecute);
         }
 
         public void Dispose()
@@ -37,15 +41,33 @@ namespace Wordle.ViewModels
             _gameStatusChangedEventSubToken.Dispose();
         }
 
-        public void Start() => _wordleSvc.Start();
-        public void Surrender()
+        private void onStartCommandExecute()
         {
-
+            GameStatus gameStatus = _wordleSvc.GameStatus;
+            switch (gameStatus)
+            {
+                case GameStatus.StandBy:
+                case GameStatus.GameOver:
+                    _wordleSvc.Start();
+                    break;
+                case GameStatus.Gaming:
+                    _wordleSvc.Surrender();
+                    break;
+            }
         }
-
         private void onGameStatusChanged(GameStatusChangedEventArgs e)
         {
-
+            GameStatus gameStatus = e.Status;
+            switch(gameStatus)
+            {
+                case GameStatus.StandBy:
+                case GameStatus.GameOver:
+                    ButtonTitle = "GameStart";
+                    break;
+                case GameStatus.Gaming:
+                    ButtonTitle = "Surrender";
+                    break;
+            }
         }
     }
 }

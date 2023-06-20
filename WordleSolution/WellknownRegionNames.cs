@@ -10,5 +10,6 @@ namespace Wordle
     {
         public const string MainViewRegion = "MainViewRegion";
         public const string WordleLinesRegion = "WordleLinesRegion";
+        public const string WordleKeypadRegion = "WordleKeypadRegion";
     }
 }

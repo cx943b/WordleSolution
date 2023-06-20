@@ -3,6 +3,8 @@
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
                     xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.AskModelTemplate.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.WordleLine.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.WordleAskKeypad.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

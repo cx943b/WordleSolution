@@ -29,10 +29,13 @@ namespace Wordle
 
         readonly GameStatusChangedEvent _gameStatusChangedEvent;
 
+        GameStatus _GameStatus = GameStatus.StandBy;
         IRegion? _wordleLinesRegion;
 
         string[]? _words;
         string? _selectedWord;
+
+        public GameStatus GameStatus => _GameStatus;
 
 
         public WordleService(ILogger<WordleService> logger, IConfiguration config, IRegionManager regionMgr, IEventAggregator eventAggregator, IContainerProvider containerProv)
@@ -120,7 +123,7 @@ namespace Wordle
         }
         public void Surrender()
         {
-
+            _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.GameOver, AskResult.Fail));
         }
         public bool WriteChar(char ch)
         {
@@ -166,6 +169,8 @@ namespace Wordle
         /// <exception cref="NullReferenceException"></exception>
         private AskResult askWord()
         {
+            if (_wordleLinesRegion is null)
+                throw new NullReferenceException(nameof(_wordleLinesRegion));
             if (_words is null)
                 throw new NullReferenceException(nameof(_words));
             if (_selectedWord is null)

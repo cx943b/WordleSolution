@@ -18,7 +18,8 @@
     </i:Interaction.Triggers>
     
     <DockPanel LastChildFill="True">
-        <Button Content="Start" Padding="4 12" DockPanel.Dock="Bottom"/>
-        <localCtrl:WordleLineStackPanel DockPanel.Dock="Top" prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
+        <Button Content="{Binding ButtonTitle, FallbackValue=ButtonTitle}" Padding="4 12" DockPanel.Dock="Bottom" Command="{Binding StartCommand, Mode=OneTime}"/>
+        <ContentControl DockPanel.Dock="Bottom" prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadRegion}"/>
+        <localCtrl:WordleLineStackPanel prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
     </DockPanel>
 </UserControl>

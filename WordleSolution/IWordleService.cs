@@ -4,6 +4,8 @@ namespace Wordle
 {
     public interface IWordleService
     {
+        GameStatus GameStatus { get; }
+
         bool AskWord();
         bool EraseChar();
         Task<bool> InitializeAsync();
