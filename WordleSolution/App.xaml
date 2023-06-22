@@ -5,6 +5,5 @@
                         xmlns:prism="http://prismlibrary.com/"
                         xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
     <Application.Resources>
-        
     </Application.Resources>
 </prism:PrismApplication>

@@ -17,7 +17,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True" DragEnter="DockPanel_DragEnter" DragLeave="DockPanel_DragLeave" DragOver="DockPanel_DragOver" AllowDrop="True" Background="White">
         <Button Content="{Binding ButtonTitle, FallbackValue=ButtonTitle}" Padding="4 12" DockPanel.Dock="Bottom" Command="{Binding StartCommand, Mode=OneTime}"/>
         <ContentControl DockPanel.Dock="Bottom" prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadRegion}"/>
         <localCtrl:WordleLineStackPanel prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>

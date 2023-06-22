@@ -7,7 +7,7 @@
 
     <Style x:Key="{x:Type localCtrl:WordleAskKeypad}" TargetType="{x:Type localCtrl:WordleAskKeypad}">
         <Setter Property="Padding" Value="4"/>
-        <Setter Property="ItemTemplate" Value="{StaticResource AskModelTemplateKey}"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource AskModelKeypadTemplateKey}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type localCtrl:WordleAskKeypadItem}">
