@@ -3,35 +3,7 @@
                     xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
     
     
-    <DataTemplate x:Key="AskModelTemplateKey" DataType="{x:Type wordleInfraModel:AskModel}">
-        <Border x:Name="bd" Padding="4" CornerRadius="4"
-                            BorderBrush="DimGray" BorderThickness="1">
-            <TextBlock Text="{Binding Character}" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
+    
 
-        <DataTemplate.Triggers>
-            <DataTrigger Binding="{Binding IsCurrected}" Value="True">
-                <Setter TargetName="bd" Property="Background" Value="LightGreen"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsExisted}" Value="True">
-                <Setter TargetName="bd" Property="Background" Value="Orange"/>
-            </DataTrigger>
-        </DataTemplate.Triggers>
-    </DataTemplate>
-
-    <DataTemplate x:Key="AskModelKeypadTemplateKey" DataType="{x:Type wordleInfraModel:AskModel}">
-        <Border x:Name="bd" Padding="4" CornerRadius="4" AllowDrop="True"
-                            BorderBrush="DimGray" BorderThickness="1" Background="CornflowerBlue">
-            <TextBlock Text="{Binding Character}" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-
-        <DataTemplate.Triggers>
-            <DataTrigger Binding="{Binding IsCurrected}" Value="True">
-                <Setter TargetName="bd" Property="Background" Value="LightGreen"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsExisted}" Value="True">
-                <Setter TargetName="bd" Property="Background" Value="Orange"/>
-            </DataTrigger>
-        </DataTemplate.Triggers>
-    </DataTemplate>
+   
 </ResourceDictionary>

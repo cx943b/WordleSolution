@@ -20,5 +20,5 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <localCtrl:WordleLine ItemsSource="{Binding AskModels}" IsTargetLine="{Binding IsTargetLine}"/>
+    <localCtrl:WordleLine ItemsSource="{Binding AskModels}"/>
 </UserControl>

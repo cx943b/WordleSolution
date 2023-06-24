@@ -6,6 +6,22 @@
         <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.AskModelTemplate.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <DataTemplate x:Key="AskModelTemplateKey" DataType="{x:Type wordleInfraModel:AskModel}">
+        <Border x:Name="bd" Padding="4" CornerRadius="4"
+                            BorderBrush="DimGray" BorderThickness="1">
+            <TextBlock Text="{Binding Character}" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsCurrected}" Value="True">
+                <Setter TargetName="bd" Property="Background" Value="LightGreen"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsExisted}" Value="True">
+                <Setter TargetName="bd" Property="Background" Value="Orange"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
     <Style x:Key="{x:Type localCtrl:WordleLine}" TargetType="{x:Type localCtrl:WordleLine}">
         <Setter Property="Background" Value="White"/>
         <Setter Property="Margin" Value="8"/>
@@ -27,7 +43,7 @@
                     <Setter Property="Margin" Value="4"/>
                     <Setter Property="Width" Value="60"/>
                     <Setter Property="Height" Value="60"/>
-                    <Setter Property="IsInputTarget" Value="{Binding IsInputTarget}"/>
+                    <Setter Property="AllowDrop" Value="True"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type localCtrl:WordleLineItem}">
@@ -45,10 +61,5 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsTargetLine" Value="True">
-                <Setter Property="Background" Value="Beige"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 </ResourceDictionary>

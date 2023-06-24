@@ -22,29 +22,66 @@ namespace Wordle.Views
     /// </summary>
     public partial class MainView : UserControl
     {
-        WordleAskKeypadItemAdorner _adorner;
+        WordleAskKeypadItemAdorner? _adorner;
 
         public MainView()
         {
             InitializeComponent();
         }
 
-        private void DockPanel_DragEnter(object sender, DragEventArgs e)
+        protected override void OnDragEnter(DragEventArgs e)
+        {
+            base.OnDragEnter(e);
+
+            if (!e.Data.GetDataPresent(typeof(AskModel)))
+                return;
+
+            AskModel? askModel = e.Data.GetData(typeof(AskModel)) as AskModel;
+            if (askModel != null)
+                showDragAdorner(askModel, e.GetPosition(this));
+        }
+        protected override void OnDragLeave(DragEventArgs e)
+        {
+            base.OnDragLeave(e);
+
+            hideDragAdorner();
+        }
+        protected override void OnDragOver(DragEventArgs e)
+        {
+            base.OnDragOver(e);
+
+            if (_adorner is null)
+                return;
+
+            Point mousePos = e.GetPosition(this);
+            _adorner.Point = mousePos;
+            _adorner.InvalidateVisual();
+        }
+        protected override void OnDrop(DragEventArgs e)
+        {
+            base.OnDrop(e);
+
+            if (!e.Data.GetDataPresent(typeof(AskModel)))
+                return;
+
+            hideDragAdorner();
+        }
+
+        private void showDragAdorner(AskModel askModel, Point mousePos)
         {
             if (_adorner is null)
             {
                 _adorner = new WordleAskKeypadItemAdorner(this);
-                _adorner.Character = ((AskModel)e.Data.GetData(typeof(AskModel))).Character;
+                _adorner.Character = askModel.Character;
+
                 AdornerLayer adoLayer = AdornerLayer.GetAdornerLayer(this);
                 adoLayer.Add(_adorner);
 
-                Point mousePos = e.GetPosition(this);
                 _adorner.Point = mousePos;
                 _adorner.InvalidateVisual();
             }
         }
-
-        private void DockPanel_DragLeave(object sender, DragEventArgs e)
+        private void hideDragAdorner()
         {
             if (_adorner is not null)
             {
@@ -53,13 +90,6 @@ namespace Wordle.Views
 
                 _adorner = null;
             }
-        }
-
-        private void DockPanel_DragOver(object sender, DragEventArgs e)
-        {
-            Point mousePos = e.GetPosition(this);
-            _adorner.Point = mousePos;
-            _adorner.InvalidateVisual();
         }
     }
 }
