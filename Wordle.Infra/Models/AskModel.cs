@@ -35,4 +35,9 @@ namespace WordleSolution.Models
             set => SetProperty(ref _IsCurrected, value);
         }
     }
+
+    public class WordleLineAskModel : AskModel
+    {
+
+    }
 }

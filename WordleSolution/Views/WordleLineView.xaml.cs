@@ -21,7 +21,7 @@ namespace Wordle.Views
     /// </summary>
     internal partial class WordleLineView : UserControl, IWordleLine
     {
-        public IEnumerable<AskModel> AskModels
+        public IEnumerable<WordleCharacterModel> AskModels
         {
             get
             {

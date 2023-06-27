@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wordle.Infra\Wordle.Infra.csproj" />
     <ProjectReference Include="..\WordleSolution\Wordle.csproj" />
   </ItemGroup>
 

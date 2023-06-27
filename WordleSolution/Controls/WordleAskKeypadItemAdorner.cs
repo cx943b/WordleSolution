@@ -9,7 +9,7 @@ namespace Wordle.Controls
     internal class WordleAskKeypadItemAdorner : Adorner
     {
         public Char Character { get; set; } = '_';
-        public Point Point { get; set; }
+        public Point MousePosition { get; set; }
 
         public WordleAskKeypadItemAdorner(UIElement adornedElement) : base(adornedElement)
         {
@@ -18,7 +18,7 @@ namespace Wordle.Controls
 
         protected override void OnRender(DrawingContext dc)
         {
-            Point startPoint = new Point(Point.X - 35, Point.Y - 40);
+            Point startPoint = new Point(MousePosition.X - 35, MousePosition.Y - 40);
             Size adorSize = new Size(30, 40);
 
             SolidColorBrush brush = new SolidColorBrush(Colors.HotPink) { Opacity = 0.4 };

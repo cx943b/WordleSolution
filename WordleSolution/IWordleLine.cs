@@ -9,7 +9,7 @@ namespace Wordle
 {
     internal interface IWordleLine
     {
-        IEnumerable<AskModel> AskModels { get; }
+        IEnumerable<WordleCharacterModel> AskModels { get; }
 
         void PushCharacter(char character);
         void PullCharacter();

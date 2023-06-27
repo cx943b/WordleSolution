@@ -16,7 +16,7 @@ namespace Wordle.ViewModels
         readonly ILogger<WordleLineViewModel> _logger;
 
         bool _IsTargetLine;
-        IEnumerable<AskModel> _AskModels = Enumerable.Empty<AskModel>().ToArray();
+        IEnumerable<WordleCharacterModel> _AskModels = Enumerable.Empty<WordleCharacterModel>().ToArray();
 
         public bool IsTargetLine
         {
@@ -24,7 +24,7 @@ namespace Wordle.ViewModels
             set => SetProperty(ref _IsTargetLine, value);
         }
         internal int LineIndex { get; set; }
-        public IEnumerable<AskModel> AskModels
+        public IEnumerable<WordleCharacterModel> AskModels
         {
             get => _AskModels;
             internal set => SetProperty(ref _AskModels, value);
@@ -37,7 +37,7 @@ namespace Wordle.ViewModels
 
         public void PullCharacter()
         {
-            AskModel? targetModel = AskModels.LastOrDefault (am => am.Character != '_');
+            WordleCharacterModel? targetModel = AskModels.LastOrDefault (am => am.Character != '_');
             if (targetModel is not null)
                 targetModel.Character = '_';
         }
@@ -50,7 +50,7 @@ namespace Wordle.ViewModels
                 return;
             }
 
-            AskModel? targetModel = AskModels.FirstOrDefault(am => am.Character == '_');
+            WordleCharacterModel? targetModel = AskModels.FirstOrDefault(am => am.Character == '_');
             if (targetModel is not null)
                 targetModel.Character = Char.ToUpper(character);
         }

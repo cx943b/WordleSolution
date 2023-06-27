@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
-                    xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
+                    xmlns:localModel="clr-namespace:WordleSolution.Models">
 
-    <DataTemplate x:Key="AskModelKeypadTemplateKey" DataType="{x:Type wordleInfraModel:AskModel}">
+    <DataTemplate x:Key="AskModelKeypadTemplateKey" DataType="{x:Type localModel:WordleCharacterModel}">
         <Border x:Name="bd" Padding="4" CornerRadius="4" AllowDrop="True"
                             BorderBrush="DimGray" BorderThickness="1">
             <Border.Background>

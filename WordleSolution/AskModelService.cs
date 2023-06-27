@@ -9,16 +9,16 @@ namespace Wordle
 {
     internal class AskModelService : IAskModelService
     {
-        readonly AskModel[] _AskModels;
+        readonly WordleCharacterModel[] _AskModels;
 
-        public IEnumerable<AskModel> AskModels => _AskModels;
+        public IEnumerable<WordleCharacterModel> AskModels => _AskModels;
 
         public AskModelService()
         {
             int nA = 'A';
             int modelCount = ('Z' - nA) + 1;
 
-            _AskModels = Enumerable.Range(nA, modelCount).Select(i => new AskModel { Character = (char)i }).ToArray();
+            _AskModels = Enumerable.Range(nA, modelCount).Select(i => new WordleCharacterModel { Character = (char)i }).ToArray();
         }
 
         public void Clear()
@@ -34,7 +34,7 @@ namespace Wordle
 
     internal interface IAskModelService
     {
-        IEnumerable<AskModel> AskModels { get; }
+        IEnumerable<WordleCharacterModel> AskModels { get; }
 
         void Clear();
     }

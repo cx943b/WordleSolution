@@ -34,16 +34,5 @@ namespace Wordle.Controls
 
 
         static WordleLineItem() => DefaultStyleKeyProperty.OverrideMetadata(typeof(WordleLineItem), new FrameworkPropertyMetadata(typeof(WordleLineItem)));
-
-        protected override void OnDragEnter(DragEventArgs e)
-        {
-            base.OnDragEnter(e);
-            IsDropTarget = e.Data.GetDataPresent(typeof(AskModel));
-        }
-        protected override void OnDragLeave(DragEventArgs e)
-        {
-            base.OnDragLeave(e);
-            IsDropTarget = false;
-        }
     }
 }

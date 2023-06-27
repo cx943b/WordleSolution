@@ -33,10 +33,10 @@ namespace Wordle.Views
         {
             base.OnDragEnter(e);
 
-            if (!e.Data.GetDataPresent(typeof(AskModel)))
+            if (!e.Data.GetDataPresent(typeof(WordleCharacterModel)))
                 return;
 
-            AskModel? askModel = e.Data.GetData(typeof(AskModel)) as AskModel;
+            WordleCharacterModel? askModel = e.Data.GetData(typeof(WordleCharacterModel)) as WordleCharacterModel;
             if (askModel != null)
                 showDragAdorner(askModel, e.GetPosition(this));
         }
@@ -54,20 +54,20 @@ namespace Wordle.Views
                 return;
 
             Point mousePos = e.GetPosition(this);
-            _adorner.Point = mousePos;
+            _adorner.MousePosition = mousePos;
             _adorner.InvalidateVisual();
         }
         protected override void OnDrop(DragEventArgs e)
         {
             base.OnDrop(e);
 
-            if (!e.Data.GetDataPresent(typeof(AskModel)))
+            if (!e.Data.GetDataPresent(typeof(WordleCharacterModel)))
                 return;
 
             hideDragAdorner();
         }
 
-        private void showDragAdorner(AskModel askModel, Point mousePos)
+        private void showDragAdorner(WordleCharacterModel askModel, Point mousePos)
         {
             if (_adorner is null)
             {
@@ -77,7 +77,7 @@ namespace Wordle.Views
                 AdornerLayer adoLayer = AdornerLayer.GetAdornerLayer(this);
                 adoLayer.Add(_adorner);
 
-                _adorner.Point = mousePos;
+                _adorner.MousePosition = mousePos;
                 _adorner.InvalidateVisual();
             }
         }

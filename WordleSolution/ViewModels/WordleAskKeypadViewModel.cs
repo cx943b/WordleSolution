@@ -10,9 +10,9 @@ namespace Wordle.ViewModels
 {
     internal class WordleAskKeypadViewModel : BindableBase
     {
-        readonly IEnumerable<AskModel> _AskModels;
+        readonly IEnumerable<WordleCharacterModel> _AskModels;
 
-        public IEnumerable<AskModel> AskModels => _AskModels;
+        public IEnumerable<WordleCharacterModel> AskModels => _AskModels;
 
         public WordleAskKeypadViewModel(IAskModelService askModelSvc)
         {

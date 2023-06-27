@@ -180,9 +180,9 @@ namespace Wordle
             if (wordleLine is null)
                 throw new NullReferenceException(nameof(wordleLine));
 
-            IEnumerable<AskModel> askModels = wordleLine.AskModels;
+            IEnumerable<WordleCharacterModel> askModels = wordleLine.AskModels;
 
-            foreach ((char currentCh, AskModel currentAsk) in _selectedWord.Zip(askModels))
+            foreach ((char currentCh, WordleCharacterModel currentAsk) in _selectedWord.Zip(askModels))
             {
                 if (currentCh == currentAsk.Character)
                 {
@@ -252,7 +252,7 @@ namespace Wordle
             var view =_containerProv.Resolve<WordleLineView>();
             var vm = (WordleLineViewModel)view.DataContext;
 
-            vm.AskModels = Enumerable.Range(0, _selectedWord.Length).Select(i => new AskModel()).ToArray();
+            vm.AskModels = Enumerable.Range(0, _selectedWord.Length).Select(i => new WordleLineCharacterModel()).ToArray();
             vm.LineIndex = _wordleLinesRegion.Views.Count();
 
             return view;
