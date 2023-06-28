@@ -3,46 +3,53 @@
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
                     xmlns:localModel="clr-namespace:WordleSolution.Models">
 
-    <DataTemplate x:Key="AskModelKeypadTemplateKey" DataType="{x:Type localModel:WordleCharacterModel}">
-        <Border x:Name="bd" Padding="4" CornerRadius="4" AllowDrop="True"
-                            BorderBrush="DimGray" BorderThickness="1">
-            <Border.Background>
-                <SolidColorBrush Color="CornflowerBlue" Opacity="0.4"/>
-            </Border.Background>
-            <TextBlock Text="{Binding Character}" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-
-        <DataTemplate.Triggers>
-            <DataTrigger Binding="{Binding IsCurrected}" Value="True">
-                <Setter TargetName="bd" Property="Background" Value="LightGreen"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsExisted}" Value="True">
-                <Setter TargetName="bd" Property="Background" Value="Orange"/>
-            </DataTrigger>
-        </DataTemplate.Triggers>
-    </DataTemplate>
-    
-    <Style x:Key="{x:Type localCtrl:WordleAskKeypad}" TargetType="{x:Type localCtrl:WordleAskKeypad}">
+    <Style TargetType="{x:Type localCtrl:WordleKeypadItem}">
+        <Setter Property="Margin" Value="8"/>
         <Setter Property="Padding" Value="4"/>
-        <Setter Property="ItemTemplate" Value="{StaticResource AskModelKeypadTemplateKey}"/>
-        <Setter Property="ItemContainerStyle">
+        <Setter Property="AllowDrop" Value="True"/>
+        <Setter Property="Background">
             <Setter.Value>
-                <Style TargetType="{x:Type localCtrl:WordleAskKeypadItem}">
-                    <Setter Property="Margin" Value="8"/>
-                    <Setter Property="Padding" Value="4"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type localCtrl:WordleAskKeypadItem}">
-                                <ContentPresenter Margin="{TemplateBinding Padding}"/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
+                <SolidColorBrush Color="CornflowerBlue" Opacity="0.4"/>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type localCtrl:WordleAskKeypad}">
+                <ControlTemplate TargetType="{x:Type localCtrl:WordleKeypadItem}">
+                    <Border CornerRadius="4"
+                            Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <TextBlock Text="{Binding Character}" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsCurrected" Value="True">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </Trigger>
+                        <Trigger Property="IsExisted" Value="True">
+                            <Setter Property="Background" Value="Orange"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <DataTemplate x:Key="AskModelKeypadTemplateKey" DataType="{x:Type localModel:WordleCharacterModel}">
+        
+
+        
+    </DataTemplate>
+    
+    <Style x:Key="{x:Type localCtrl:WordleKeypad}" TargetType="{x:Type localCtrl:WordleKeypad}">
+        <Setter Property="Padding" Value="4"/>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <localCtrl:WordleKeypadItem />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type localCtrl:WordleKeypad}">
                     <Border CornerRadius="4"
                             Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">

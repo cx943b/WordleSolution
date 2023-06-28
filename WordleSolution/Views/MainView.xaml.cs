@@ -22,7 +22,7 @@ namespace Wordle.Views
     /// </summary>
     public partial class MainView : UserControl
     {
-        WordleAskKeypadItemAdorner? _adorner;
+        WordleKeypadItemAdorner? _adorner;
 
         public MainView()
         {
@@ -55,7 +55,6 @@ namespace Wordle.Views
 
             Point mousePos = e.GetPosition(this);
             _adorner.MousePosition = mousePos;
-            _adorner.InvalidateVisual();
         }
         protected override void OnDrop(DragEventArgs e)
         {
@@ -71,14 +70,13 @@ namespace Wordle.Views
         {
             if (_adorner is null)
             {
-                _adorner = new WordleAskKeypadItemAdorner(this);
+                _adorner = new WordleKeypadItemAdorner(this);
                 _adorner.Character = askModel.Character;
 
                 AdornerLayer adoLayer = AdornerLayer.GetAdornerLayer(this);
                 adoLayer.Add(_adorner);
 
                 _adorner.MousePosition = mousePos;
-                _adorner.InvalidateVisual();
             }
         }
         private void hideDragAdorner()

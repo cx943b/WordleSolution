@@ -9,12 +9,26 @@ using WordleSolution.Models;
 
 namespace Wordle.Controls
 {
-    internal class WordleAskKeypadItem : ContentControl
+    internal class WordleKeypadItem : ContentControl
     {
+        public static readonly DependencyProperty IsCurrectedProperty = DependencyProperty.Register("IsCurrected", typeof(bool), typeof(WordleKeypadItem), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsExistedProperty = DependencyProperty.Register("IsExisted", typeof(bool), typeof(WordleKeypadItem), new PropertyMetadata(false));
+
         public const int DragStartLength = 10;
         Point _dragStartMousePos;
 
-        static WordleAskKeypadItem() => DefaultStyleKeyProperty.OverrideMetadata(typeof(WordleAskKeypadItem), new FrameworkPropertyMetadata(typeof(WordleAskKeypadItem)));
+        public bool IsExisted
+        {
+            get { return (bool)GetValue(IsExistedProperty); }
+            set { SetValue(IsExistedProperty, value); }
+        }
+        public bool IsCurrected
+        {
+            get { return (bool)GetValue(IsCurrectedProperty); }
+            set { SetValue(IsCurrectedProperty, value); }
+        }
+
+        static WordleKeypadItem() => DefaultStyleKeyProperty.OverrideMetadata(typeof(WordleKeypadItem), new FrameworkPropertyMetadata(typeof(WordleKeypadItem)));
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
