@@ -11,8 +11,8 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
     
     <StackPanel>
-        <localCtrl:WordleLineStackPanel prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadRegion}"/>
+        <localCtrl:WordleLineStackPanel prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesViewRegion}"/>
+        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadViewRegion}"/>
         <Button Content="{Binding ButtonTitle, FallbackValue=ButtonTitle}" Padding="4 12" Command="{Binding StartCommand, Mode=OneTime}"/>
     </StackPanel>
 </UserControl>

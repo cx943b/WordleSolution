@@ -18,9 +18,9 @@ namespace Wordle.Views
     /// <summary>
     /// WordleKeypadView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class WordleAskKeypadView : UserControl
+    public partial class WordleKeypadView : UserControl
     {
-        public WordleAskKeypadView()
+        public WordleKeypadView()
         {
             InitializeComponent();
         }

@@ -3,7 +3,7 @@
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
                     xmlns:localModel="clr-namespace:WordleSolution.Models">
 
-    <Style TargetType="{x:Type localCtrl:WordleKeypadItem}">
+    <Style x:Key="{x:Type localCtrl:WordleKeypadItem}" TargetType="{x:Type localCtrl:WordleKeypadItem}">
         <Setter Property="Margin" Value="8"/>
         <Setter Property="Padding" Value="4"/>
         <Setter Property="AllowDrop" Value="True"/>
@@ -28,23 +28,22 @@
                         <Trigger Property="IsExisted" Value="True">
                             <Setter Property="Background" Value="Orange"/>
                         </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="HotPink"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     
-    <DataTemplate x:Key="AskModelKeypadTemplateKey" DataType="{x:Type localModel:WordleCharacterModel}">
-        
-
-        
-    </DataTemplate>
-    
     <Style x:Key="{x:Type localCtrl:WordleKeypad}" TargetType="{x:Type localCtrl:WordleKeypad}">
         <Setter Property="Padding" Value="4"/>
         <Setter Property="ItemTemplate">
             <Setter.Value>
-                <localCtrl:WordleKeypadItem />
+                <DataTemplate DataType="{x:Type localModel:WordleCharacterModel}">
+                    <localCtrl:WordleKeypadItem/>
+                </DataTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">

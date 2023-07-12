@@ -56,7 +56,7 @@ namespace Wordle
                 // Etc.
             };
 
-            _wordleLinesRegion = _regionMgr.Regions[WellknownRegionNames.WordleLinesRegion];
+            _wordleLinesRegion = _regionMgr.Regions[WellknownRegionNames.WordleLinesViewRegion];
             if (_wordleLinesRegion is null)
             {
                 _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
@@ -123,48 +123,16 @@ namespace Wordle
         }
         public void Surrender()
         {
+            if (_wordleLinesRegion is null)
+            {
+                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
+                return;
+            }
+
+            _wordleLinesRegion.RemoveAll();
             _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.GameOver, AskResult.Fail));
         }
-        public bool WriteChar(char ch)
-        {
-            if (_wordleLinesRegion is null)
-            {
-                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
-                return false;
-            }
-
-            var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
-            if(activeWordleLineView is not null)
-            {
-                activeWordleLineView?.PushCharacter(ch);
-                return true;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, $"NullRef: {activeWordleLineView}");
-                return false;
-            }
-        }
-        public bool EraseChar()
-        {
-            if (_wordleLinesRegion is null)
-            {
-                _logger.Log(LogLevel.Error, $"NullRef: {_wordleLinesRegion}");
-                return false;
-            }
-
-            var activeWordleLineView = _wordleLinesRegion.ActiveViews.FirstOrDefault() as IWordleLine;
-            if (activeWordleLineView is not null)
-            {
-                activeWordleLineView?.PullCharacter();
-                return true;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, $"NullRef: {activeWordleLineView}");
-                return false;
-            }
-        }
+        
 
         /// <exception cref="NullReferenceException"></exception>
         private AskResult askWord()
@@ -236,7 +204,7 @@ namespace Wordle
             };
 
             _wordleLinesRegion.Add(newWordleLine);
-            _regionMgr.RequestNavigate(WellknownRegionNames.WordleLinesRegion, nameof(WordleLineView), navParams);
+            _regionMgr.RequestNavigate(WellknownRegionNames.WordleLinesViewRegion, nameof(WordleLineView), navParams);
 
             _wordleLinesRegion.Activate(newWordleLine);
         }
