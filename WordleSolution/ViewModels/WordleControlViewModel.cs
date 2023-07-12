@@ -44,7 +44,7 @@ namespace Wordle.ViewModels
 
         private void onStartCommandExecute() => _wordleSvc.Start();
         private void onSurrenderCommandExecute() => _wordleSvc.Surrender();
-        private void onSubmitCommandExecute() => 
+        private void onSubmitCommandExecute() => _wordleSvc.AskWord();
         private void onGameStatusChanged(GameStatusChangedEventArgs e)
         {
             GameStatus = e.Status;

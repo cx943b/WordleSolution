@@ -38,6 +38,7 @@ namespace Wordle
 
             IWordleService wordleSvc = Container.Resolve<IWordleService>();
             await wordleSvc.InitializeAsync();
+            wordleSvc.InitWordleLine();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

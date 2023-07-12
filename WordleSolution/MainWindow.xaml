@@ -8,8 +8,5 @@
         mc:Ignorable="d" SizeToContent="Height"
         Title="MainWindow" Height="450" Width="800">
 
-    <DockPanel LastChildFill="True">
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.MainViewRegion}"/>
-    </DockPanel>
-    
+    <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.MainViewRegion}"/>
 </Window>
