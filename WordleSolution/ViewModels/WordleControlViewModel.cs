@@ -17,6 +17,7 @@ namespace Wordle.ViewModels
 
         readonly DelegateCommand _StartCommand;
         readonly DelegateCommand _SurrenderCommand;
+        readonly DelegateCommand _SubmitCommand;
 
         GameStatus _GameStatus;
 
@@ -27,14 +28,16 @@ namespace Wordle.ViewModels
         }
         public ICommand StartCommand => _StartCommand;
         public ICommand SurrenderCommand => _SurrenderCommand;
+        public ICommand SubmitCommand => _SubmitCommand;
 
         public WordleControlViewModel(IEventAggregator eventAggregator, IWordleService wordleSvc)
         {
             _gameStatusChangedEventSubToken = eventAggregator.GetEvent<GameStatusChangedEvent>().Subscribe(onGameStatusChanged);
             _wordleSvc = wordleSvc;
 
-            _StartCommand = new DelegateCommand(onStartCommandExecute);
-            _SurrenderCommand = new DelegateCommand(onSurrenderCommandExecute);
+            _StartCommand = new DelegateCommand(onStartCommandExecute, () => GameStatus == GameStatus.StandBy).ObservesProperty(() => GameStatus);
+            _SurrenderCommand = new DelegateCommand(onSurrenderCommandExecute, () => GameStatus == GameStatus.Gaming).ObservesProperty(() => GameStatus);
+            _SubmitCommand = new DelegateCommand(onSubmitCommandExecute, () => GameStatus == GameStatus.Gaming).ObservesProperty(() => GameStatus);
         }
 
         public void Dispose()

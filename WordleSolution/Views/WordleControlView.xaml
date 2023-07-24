@@ -4,9 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Wordle.Views"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Margin="12 0 12 12" 
              d:DesignHeight="40" d:DesignWidth="800">
-    <Grid>
+    
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Padding" Value="12 6"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*"/>
             <ColumnDefinition Width="6"/>
@@ -15,8 +23,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <Button Content="Start" Grid.Column="0"/>
-        <Button Content="Next"  Grid.Column="2"/>
-        <Button Content="Submit" Grid.Column="4"/>
+        <Button Content="Start" Grid.Column="0" Command="{Binding StartCommand, Mode=OneTime}"/>
+        <Button Content="Surrender"  Grid.Column="2" Command="{Binding SurrenderCommand, Mode=OneTime}"/>
+        <Button Content="Submit" Grid.Column="4" Command="{Binding SubmitCommand, Mode=OneTime}"/>
     </Grid>
 </UserControl>

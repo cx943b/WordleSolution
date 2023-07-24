@@ -32,15 +32,13 @@ namespace Wordle
 
             IRegionManager regionMgr = Container.Resolve<IRegionManager>();
             regionMgr.RegisterViewWithRegion<MainView>(WellknownRegionNames.MainViewRegion);
+            regionMgr.RegisterViewWithRegion<WordleLineView>(WellknownRegionNames.WordleLineViewRegion);
             regionMgr.RegisterViewWithRegion<WordleKeypadView>(WellknownRegionNames.WordleKeypadViewRegion);
             regionMgr.RegisterViewWithRegion<WordleControlView>(WellknownRegionNames.WordleControlViewRegion);
 
-
             IWordleService wordleSvc = Container.Resolve<IWordleService>();
             await wordleSvc.InitializeAsync();
-            wordleSvc.InitWordleLine();
         }
-
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IConfiguration>(prov =>
@@ -75,7 +73,7 @@ namespace Wordle
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
         {
             base.ConfigureRegionAdapterMappings(regionAdapterMappings);
-            regionAdapterMappings.RegisterMapping<WordleLineStackPanel>(Container.Resolve<WordleLineStackPanelRegionAdapter>());
+            regionAdapterMappings.RegisterMapping<WordleLine>(Container.Resolve<WordleLineItemsRegionAdapter>());
         }
     }
 }

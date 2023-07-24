@@ -8,7 +8,6 @@ namespace Wordle
 
         bool AskWord();
         Task<bool> InitializeAsync();
-        void InitWordleLine();
         bool Start();
         void Surrender();
     }

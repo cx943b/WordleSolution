@@ -20,5 +20,5 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <localCtrl:WordleLine ItemsSource="{Binding AskModels}"/>
+    <localCtrl:WordleLine prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLineItemsRegion}"/>
 </UserControl>
