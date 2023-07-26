@@ -44,15 +44,23 @@ namespace WordleSolution.Models
         char _befDragChar = '_';
 
         bool _IsDropTarget;
+        bool _IsPrinted;
 
         DelegateCommand<DragEventArgs> _DragEnterCommand;
         DelegateCommand<DragEventArgs> _DragLeaveCommand;
         DelegateCommand<DragEventArgs> _DropCommand;
 
+        public WordleCharacterModel? DropedCharModel { get; set; }
+
         public bool IsDropTarget
         {
             get => _IsDropTarget;
             set => SetProperty(ref _IsDropTarget, value);
+        }
+        public bool IsPrinted
+        {
+            get => _IsPrinted;
+            set => SetProperty(ref _IsPrinted, value);
         }
 
         public ICommand DragEnter => _DragEnterCommand;
@@ -62,9 +70,9 @@ namespace WordleSolution.Models
 
         public WordleLineCharacterModel()
         {
-            _DragEnterCommand = new DelegateCommand<DragEventArgs>(onDragEnter);
-            _DragLeaveCommand = new DelegateCommand<DragEventArgs>(onDragLeave);
-            _DropCommand = new DelegateCommand<DragEventArgs>(onDrop);
+            _DragEnterCommand = new DelegateCommand<DragEventArgs>(onDragEnter, e => !_IsPrinted).ObservesProperty(() => IsPrinted);
+            _DragLeaveCommand = new DelegateCommand<DragEventArgs>(onDragLeave, e => !_IsPrinted).ObservesProperty(() => IsPrinted);
+            _DropCommand = new DelegateCommand<DragEventArgs>(onDrop, e => !_IsPrinted).ObservesProperty(() => IsPrinted);
         }
 
         private void onDragEnter(DragEventArgs e)
@@ -97,6 +105,12 @@ namespace WordleSolution.Models
                 return;
 
             IsDropTarget = false;
+
+            bool isValidData = tryGetData(e.Data, out WordleCharacterModel? askModel);
+            if (isValidData && askModel is not null)
+            {
+                DropedCharModel = e.Data.GetData(typeof(WordleCharacterModel)) as WordleCharacterModel;
+            }
         }
 
         private bool isValidateData(IDataObject dragData) => dragData.GetDataPresent(typeof(WordleCharacterModel));
