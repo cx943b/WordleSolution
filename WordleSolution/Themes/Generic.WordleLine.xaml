@@ -18,6 +18,8 @@
         <Setter Property="BorderBrush" Value="DimGray"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="IsCurrected" Value="{Binding IsCurrected}"/>
+        <Setter Property="IsExcepted" Value="{Binding IsExcepted}"/>
+        <Setter Property="IsExisted" Value="{Binding IsExisted}"/>
         <Setter Property="IsDropTarget" Value="{Binding IsDropTarget}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -41,24 +43,18 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsExisted" Value="True">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </Trigger>
                         <Trigger Property="IsCurrected" Value="True">
                             <Setter Property="Background" Value="LightGreen"/>
                         </Trigger>
+
+                        <Trigger Property="IsExcepted" Value="True">
+                            <Setter Property="Background" Value="Crimson"/>
+                        </Trigger>
                         <Trigger Property="IsDropTarget" Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)">
-                                        <ColorAnimation Duration="0:0:0.5" To="Crimson" AccelerationRatio="1" RepeatBehavior="Forever" AutoReverse="True"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)">
-                                        <ColorAnimation Duration="0:0:0.3" To="White" AccelerationRatio="1" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
+                            <Setter Property="Background" Value="HotPink"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

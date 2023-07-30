@@ -14,6 +14,7 @@ namespace Wordle.Controls
     {
         public static readonly DependencyProperty IsCurrectedProperty = DependencyProperty.Register("IsCurrected", typeof(bool), typeof(WordleLineItem), new PropertyMetadata(false));
         public static readonly DependencyProperty IsExistedProperty = DependencyProperty.Register("IsExisted", typeof(bool), typeof(WordleLineItem), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsExceptedProperty = DependencyProperty.Register("IsExcepted", typeof(bool), typeof(WordleLineItem), new PropertyMetadata(false));
         public static readonly DependencyProperty IsDropTargetProperty = DependencyProperty.Register("IsDropTarget", typeof(bool), typeof(WordleLineItem), new PropertyMetadata(false));
 
         public bool IsExisted
@@ -25,6 +26,11 @@ namespace Wordle.Controls
         {
             get { return (bool)GetValue(IsCurrectedProperty); }
             set { SetValue(IsCurrectedProperty, value); }
+        }
+        public bool IsExcepted
+        {
+            get { return (bool)GetValue(IsExceptedProperty); }
+            set { SetValue(IsExceptedProperty, value); }
         }
         public bool IsDropTarget
         {

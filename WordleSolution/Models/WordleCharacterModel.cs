@@ -16,6 +16,7 @@ namespace WordleSolution.Models
         bool _IsInputTarget;
         bool _IsExisted;
         bool _IsCurrected;
+        bool _IsExepted;
 
         public bool IsInputTarget
         {
@@ -36,6 +37,11 @@ namespace WordleSolution.Models
         {
             get => _IsCurrected;
             set => SetProperty(ref _IsCurrected, value);
+        }
+        public bool IsExepted
+        {
+            get => _IsExepted;
+            set => SetProperty(ref _IsExepted, value);
         }
     }
 

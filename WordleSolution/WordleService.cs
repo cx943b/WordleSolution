@@ -80,7 +80,7 @@ namespace Wordle
             try
             {
                 selectWord();
-                printWord(String.Concat(Enumerable.Range(0, _selectedWord!.Length).Select(i => ' ').ToArray()), false);
+                printWord (String.Concat(Enumerable.Range(0, _selectedWord!.Length).Select(i => ' ').ToArray()), false);
             }
             catch(Exception ex)
             {
@@ -136,29 +136,37 @@ namespace Wordle
             if (_selectedWord is null)
                 throw new NullReferenceException(nameof(_selectedWord));
 
-            AskResult result = AskResult.Currect;
+            WordleLineCharacterModel[] wordleLineModels = _wordleLineItemsRegion.Views.Cast<WordleLineCharacterModel>().ToArray();
+            if (wordleLineModels.Any(m => m.Character == ' '))
+                return AskResult.WaitNext;
 
-            // ToDo
-            foreach((WordleLineCharacterModel lineCharModel, char selectedChar) in _wordleLineItemsRegion.Views.Cast<WordleLineCharacterModel>().Zip(_selectedWord))
+            foreach((WordleLineCharacterModel lineCharModel, char selectedChar) in wordleLineModels.Zip(_selectedWord))
             {
-                if(lineCharModel.Character == selectedChar)
+                if (lineCharModel.DropedCharModel == null)
+                    throw new NullReferenceException(nameof(lineCharModel.DropedCharModel));
+
+                if (lineCharModel.Character == selectedChar)
                 {
                     // CurrectChar
-                    
+                    lineCharModel.IsCurrected = true;
+                    lineCharModel.IsPrinted = true;
                 }
                 else if(_selectedWord.Contains(lineCharModel.Character))
                 {
                     // ExistChar
-                    result = AskResult.WaitNext;
+                    lineCharModel.IsExisted = true;
                 }
                 else
                 {
                     // Nothing
-                    result = AskResult.WaitNext;
+                    lineCharModel.IsExepted = true;
                 }
             }
 
-            return result;
+            if (wordleLineModels.Any(m => m.IsExisted || m.IsExepted))
+                return AskResult.WaitNext;
+
+            return AskResult.Currect;
         }
         private bool loadWords()
         {
