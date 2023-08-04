@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.WordleLine.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.WordleAskKeypad.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.WordleLines.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.WordleKeypad.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace WordleSolution.Models
+namespace Wordle.Models
 {
     public class WordleCharacterModel : BindableBase
     {

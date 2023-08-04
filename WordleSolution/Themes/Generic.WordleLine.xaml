@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Wordle"
                     xmlns:localCtrl="clr-namespace:Wordle.Controls"
-                    xmlns:localModel="clr-namespace:WordleSolution.Models"
+                    xmlns:localModel="clr-namespace:Wordle.Models"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:prism="http://prismlibrary.com/">
 

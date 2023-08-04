@@ -73,7 +73,9 @@ namespace Wordle
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
         {
             base.ConfigureRegionAdapterMappings(regionAdapterMappings);
+
             regionAdapterMappings.RegisterMapping<WordleLine>(Container.Resolve<WordleLineItemsRegionAdapter>());
+            regionAdapterMappings.RegisterMapping<WordleLines>(Container.Resolve<WordleLinesRegionAdapter>());
         }
     }
 }

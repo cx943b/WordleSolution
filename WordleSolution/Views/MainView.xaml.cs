@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Wordle.Controls;
-using WordleSolution.Models;
+using Wordle.Models;
 
 namespace Wordle.Views
 {

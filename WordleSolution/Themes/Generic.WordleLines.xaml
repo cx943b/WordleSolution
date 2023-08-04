@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:localCtrl="clr-namespace:Wordle.Controls"
+                    xmlns:localModel="clr-namespace:Wordle.Models"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:prism="http://prismlibrary.com/">
+
+    <Style x:Key="{x:Type localCtrl:WordleLines}" TargetType="{x:Type localCtrl:WordleLines}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type localCtrl:WordleLines}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                            <ItemsPresenter Margin="{TemplateBinding Padding}"/>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="{x:Type localModel:WordleLineCharacterModel}">
+                    <localCtrl:WordleLine ItemsSource="{Binding CharacterModels}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

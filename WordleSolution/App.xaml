@@ -3,7 +3,7 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:local="clr-namespace:Wordle"
                         xmlns:prism="http://prismlibrary.com/"
-                        xmlns:wordleInfraModel="clr-namespace:WordleSolution.Models;assembly=Wordle.Infra">
+                        xmlns:wordleInfraModel="clr-namespace:Wordle.Models;assembly=Wordle.Infra">
     <Application.Resources>
     </Application.Resources>
 </prism:PrismApplication>

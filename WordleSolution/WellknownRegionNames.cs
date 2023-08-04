@@ -8,9 +8,11 @@ namespace Wordle
 {
     internal class WellknownRegionNames
     {
+        public const string WordleLineItemsRegion = "WordleLineItemsRegion";
+        public const string WordleLinesRegion = "WordleLinesRegion";
+
         public const string MainViewRegion = "MainViewRegion";
         public const string WordleLineViewRegion = "WordleLineViewRegion";
-        public const string WordleLineItemsRegion = "WordleLineItemsRegion";
         public const string WordleKeypadViewRegion = "WordleKeypadViewRegion";
         public const string WordleControlViewRegion = "WordleControlViewRegion";
     }

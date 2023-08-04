@@ -11,9 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Xaml;
+using Wordle.Models;
 using Wordle.ViewModels;
 using Wordle.Views;
-using WordleSolution.Models;
+using Wordle.Models;
 
 namespace Wordle
 {
@@ -28,7 +29,7 @@ namespace Wordle
         readonly IContainerProvider _containerProv;
         readonly ILogger _logger;
 
-        IRegion _wordleLineItemsRegion;
+        IRegion _wordleLinesRegion;
 
         readonly GameStatusChangedEvent _gameStatusChangedEvent;
 
@@ -63,10 +64,10 @@ namespace Wordle
             bool[] initResults = await Task.WhenAll(initTasks);
             if(initResults.All(b => b))
             {
-                _wordleLineItemsRegion = _regionMgr.Regions[WellknownRegionNames.WordleLineItemsRegion];
+                _wordleLinesRegion = _regionMgr.Regions[WellknownRegionNames.WordleLinesRegion];
 
-                if (_wordleLineItemsRegion == null)
-                    throw new NullReferenceException(nameof(_wordleLineItemsRegion));
+                if (_wordleLinesRegion == null)
+                    throw new NullReferenceException(nameof(_wordleLinesRegion));
 
                 printWord("Wellcome!");
                 return true;
@@ -136,34 +137,34 @@ namespace Wordle
             if (_selectedWord is null)
                 throw new NullReferenceException(nameof(_selectedWord));
 
-            WordleLineCharacterModel[] wordleLineModels = _wordleLineItemsRegion.Views.Cast<WordleLineCharacterModel>().ToArray();
-            if (wordleLineModels.Any(m => m.Character == ' '))
+            WordleLineModel lastWordleLineModel = _wordleLinesRegion.Views.Cast<WordleLineModel>().Last();
+            if (lastWordleLineModel.CharacterModels.Any(m => m.Character == ' '))
                 return AskResult.WaitNext;
 
-            foreach((WordleLineCharacterModel lineCharModel, char selectedChar) in wordleLineModels.Zip(_selectedWord))
+            foreach((WordleLineCharacterModel charModel, char selectedChar) in lastWordleLineModel.CharacterModels.Zip(_selectedWord))
             {
-                if (lineCharModel.DropedCharModel == null)
-                    throw new NullReferenceException(nameof(lineCharModel.DropedCharModel));
+                if (charModel.DropedCharModel == null)
+                    throw new NullReferenceException(nameof(charModel.DropedCharModel));
 
-                if (lineCharModel.Character == selectedChar)
+                if (charModel.Character == selectedChar)
                 {
                     // CurrectChar
-                    lineCharModel.IsCurrected = true;
-                    lineCharModel.IsPrinted = true;
+                    charModel.IsCurrected = true;
+                    charModel.IsPrinted = true;
                 }
-                else if(_selectedWord.Contains(lineCharModel.Character))
+                else if(_selectedWord.Contains(charModel.Character))
                 {
                     // ExistChar
-                    lineCharModel.IsExisted = true;
+                    charModel.IsExisted = true;
                 }
                 else
                 {
                     // Nothing
-                    lineCharModel.IsExepted = true;
+                    charModel.IsExepted = true;
                 }
             }
 
-            if (wordleLineModels.Any(m => m.IsExisted || m.IsExepted))
+            if (lastWordleLineModel.CharacterModels.Any(m => m.IsExisted || m.IsExepted))
                 return AskResult.WaitNext;
 
             return AskResult.Currect;
@@ -185,17 +186,18 @@ namespace Wordle
             int selectionIndex = _rand.Next(_words.Length);
             _selectedWord = _words[selectionIndex].ToUpper();
         }
-        private void printWord(string word, bool isReadonly = true)
+        private void printWord(string word,bool isReadonly = true)
         {
             if (String.IsNullOrEmpty(word))
                 throw new NullReferenceException(nameof(word));
 
-            _wordleLineItemsRegion.RemoveAll();
+            if (isReadonly)
+                _wordleLinesRegion.RemoveAll();
 
-            foreach (var c in word.Select(ch => new WordleLineCharacterModel { Character = ch, IsPrinted = isReadonly }))
-            {
-                _wordleLineItemsRegion.Add(c);
-            }
+            WordleLineModel lineModel = new WordleLineModel();
+            lineModel.CharacterModels = word.Select(ch => new WordleLineCharacterModel { Character = ch, IsPrinted = isReadonly }).ToArray();
+
+            _wordleLinesRegion.Add(lineModel);
         }
     }
 }

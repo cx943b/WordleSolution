@@ -10,9 +10,20 @@
              d:DesignHeight="450" d:DesignWidth="800" AllowDrop="True" Background="White"
              prism:ViewModelLocator.AutoWireViewModel="True">
     
-    <StackPanel>
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLineViewRegion}"/>
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadViewRegion}"/>
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleControlViewRegion}"/>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="6"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <localCtrl:WordleLines prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
+        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadViewRegion}" Grid.Column="2"/>
+        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleControlViewRegion}" Grid.Row="2" Grid.ColumnSpan="3"/>
+    </Grid>
 </UserControl>

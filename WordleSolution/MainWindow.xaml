@@ -8,5 +8,12 @@
         mc:Ignorable="d" SizeToContent="Height"
         Title="MainWindow" Height="450" Width="800">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Wordle;Component/Themes/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.MainViewRegion}"/>
 </Window>

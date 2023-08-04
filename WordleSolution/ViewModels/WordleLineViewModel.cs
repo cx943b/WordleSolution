@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WordleSolution.Models;
+using Wordle.Models;
 
 namespace Wordle.ViewModels
 {
@@ -14,7 +14,15 @@ namespace Wordle.ViewModels
     {
         readonly ILogger<WordleLineViewModel> _logger;
 
+        string _RegionName = "";
+
         IEnumerable<WordleCharacterModel> _CharModels = Enumerable.Empty<WordleCharacterModel>().ToArray();
+
+        public string RegionName
+        {
+            get => _RegionName;
+            set => SetProperty(ref _RegionName, value);
+        }
 
         public IEnumerable<WordleCharacterModel> CharacterModels
         {

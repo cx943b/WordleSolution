@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Wordle"
              xmlns:localCtrl="clr-namespace:Wordle.Controls"
-             xmlns:wordleModel="clr-namespace:WordleSolution.Models"
+             xmlns:wordleModel="clr-namespace:Wordle.Models"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
@@ -20,5 +20,5 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <localCtrl:WordleLine prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLineItemsRegion}"/>
+    <localCtrl:WordleLine prism:RegionManager.RegionName="{Binding RegionName}"/>
 </UserControl>

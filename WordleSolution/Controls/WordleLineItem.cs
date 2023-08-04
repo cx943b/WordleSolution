@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using WordleSolution.Models;
+using Wordle.Models;
 
 namespace Wordle.Controls
 {
