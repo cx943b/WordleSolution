@@ -1,30 +1,28 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using Wordle.Models;
 
 namespace Wordle.Models
 {
     internal class WordleLineModel : BindableBase
     {
-        string _RegionName = "";
+        readonly ObservableCollection<WordleCharacterModel> _lstCharModel = new ObservableCollection<WordleCharacterModel>();
+        readonly CollectionViewSource _charCVS = new CollectionViewSource();
 
-        IEnumerable<WordleLineCharacterModel> _CharModels = Enumerable.Empty<WordleLineCharacterModel>().ToArray();
+        public ICollectionView CharacterModels => _charCVS.View;
 
-        public string RegionName
+        public WordleLineModel()
         {
-            get => _RegionName;
-            set => SetProperty(ref _RegionName, value);
+            _charCVS.Source = _lstCharModel;
         }
 
-        public IEnumerable<WordleLineCharacterModel> CharacterModels
-        {
-            get => _CharModels;
-            internal set => SetProperty(ref _CharModels, value);
-        }
-
+        internal void SetCharacterModels(IEnumerable<WordleCharacterModel> charModels) => _lstCharModel.AddRange(charModels);
     }
 }

@@ -7,8 +7,20 @@ using System.Threading.Tasks;
 
 namespace Wordle
 {
+    public class GameRemainCountChangedEvent : PubSubEvent<GameRemainCountChangedEventArgs> { }
     public class GameStatusChangedEvent : PubSubEvent<GameStatusChangedEventArgs> { }
 
+    public class GameRemainCountChangedEventArgs: EventArgs
+    {
+        public int RemainCount { get; init; }
+
+        public GameRemainCountChangedEventArgs(int remainCount)
+        {
+            if (remainCount < 0) throw new ArgumentOutOfRangeException(nameof(remainCount));
+
+            RemainCount = remainCount;
+        }
+    }
     public class GameStatusChangedEventArgs : EventArgs
     {
         public GameStatus Status { get; init; }

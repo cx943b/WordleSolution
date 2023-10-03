@@ -12,7 +12,7 @@ namespace Wordle.ViewModels
 {
     internal class WordleControlViewModel : BindableBase, IDisposable
     {
-        readonly SubscriptionToken _gameStatusChangedEventSubToken;        
+        readonly SubscriptionToken _gameStatusChangedEventSubToken;
         readonly IWordleService _wordleSvc;
 
         readonly DelegateCommand _StartCommand;
@@ -35,7 +35,7 @@ namespace Wordle.ViewModels
             _gameStatusChangedEventSubToken = eventAggregator.GetEvent<GameStatusChangedEvent>().Subscribe(onGameStatusChanged);
             _wordleSvc = wordleSvc;
 
-            _StartCommand = new DelegateCommand(onStartCommandExecute, () => GameStatus == GameStatus.StandBy).ObservesProperty(() => GameStatus);
+            _StartCommand = new DelegateCommand(onStartCommandExecute, () => GameStatus == GameStatus.StandBy || GameStatus == GameStatus.GameOver).ObservesProperty(() => GameStatus);
             _SurrenderCommand = new DelegateCommand(onSurrenderCommandExecute, () => GameStatus == GameStatus.Gaming).ObservesProperty(() => GameStatus);
             _SubmitCommand = new DelegateCommand(onSubmitCommandExecute, () => GameStatus == GameStatus.Gaming).ObservesProperty(() => GameStatus);
         }

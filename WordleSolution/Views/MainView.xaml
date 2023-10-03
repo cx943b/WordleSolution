@@ -12,6 +12,7 @@
     
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="6"/>
             <RowDefinition Height="auto"/>
@@ -22,8 +23,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <localCtrl:WordleLines prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}"/>
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadViewRegion}" Grid.Column="2"/>
-        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleControlViewRegion}" Grid.Row="2" Grid.ColumnSpan="3"/>
+        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleStateViewRegion}" Grid.ColumnSpan="3"/>
+        <localCtrl:WordleLines prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleLinesRegion}" Grid.Row="1"/>
+        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleKeypadViewRegion}" Grid.Row="1" Grid.Column="2"/>
+        <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.WordleControlViewRegion}" Grid.Row="3" Grid.ColumnSpan="3"/>
     </Grid>
 </UserControl>

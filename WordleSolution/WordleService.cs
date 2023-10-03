@@ -18,24 +18,25 @@ using Wordle.Models;
 
 namespace Wordle
 {
-    
+
     public class WordleService : IWordleService
     {
         const int MaxAskCount = 5;
 
-        readonly Random _rand= new Random();
+        readonly Random _rand = new Random();
         readonly IConfiguration _config;
         readonly IRegionManager _regionMgr;
         readonly IContainerProvider _containerProv;
         readonly ILogger _logger;
 
-        IRegion _wordleLinesRegion;
-
+        readonly IList<IEnumerable<WordleLineCharacterModel>> _lstCharModels = new List<IEnumerable<WordleLineCharacterModel>>();
         readonly GameStatusChangedEvent _gameStatusChangedEvent;
+        readonly GameRemainCountChangedEvent _gameRemainCountChangedEvent;
 
+        IRegion? _wordleLinesRegion;
         GameStatus _GameStatus = GameStatus.StandBy;
-        
 
+        int _remainCount;
         string[]? _words;
         string? _selectedWord;
 
@@ -49,7 +50,7 @@ namespace Wordle
             _regionMgr = regionMgr;
             _containerProv = containerProv;
 
-            
+            _gameRemainCountChangedEvent = eventAggregator.GetEvent<GameRemainCountChangedEvent>();
             _gameStatusChangedEvent = eventAggregator.GetEvent<GameStatusChangedEvent>();
         }
 
@@ -62,14 +63,13 @@ namespace Wordle
             };
 
             bool[] initResults = await Task.WhenAll(initTasks);
-            if(initResults.All(b => b))
+            if (initResults.All(b => b))
             {
                 _wordleLinesRegion = _regionMgr.Regions[WellknownRegionNames.WordleLinesRegion];
-
                 if (_wordleLinesRegion == null)
                     throw new NullReferenceException(nameof(_wordleLinesRegion));
 
-                printWord("Wellcome!");
+                //printWord("Wellcome!");
                 return true;
             }
 
@@ -78,17 +78,16 @@ namespace Wordle
 
         public bool Start()
         {
-            try
-            {
-                selectWord();
-                printWord (String.Concat(Enumerable.Range(0, _selectedWord!.Length).Select(i => ' ').ToArray()), false);
-            }
-            catch(Exception ex)
-            {
-                _logger.Log(LogLevel.Error, ex.Message);
-                return false;
-            }
-            
+            if (_wordleLinesRegion is null)
+                throw new NullReferenceException(nameof(_wordleLinesRegion));
+
+            _wordleLinesRegion.RemoveAll();
+            _remainCount = 5;
+
+            selectWord();
+            printWord(String.Concat(Enumerable.Range(0, _selectedWord!.Length).Select(i => ' ')), false);
+
+            _gameRemainCountChangedEvent.Publish(new GameRemainCountChangedEventArgs(_remainCount));
             _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.Gaming, AskResult.WaitNext));
 
             return true;
@@ -101,25 +100,20 @@ namespace Wordle
             {
                 askResult = askWord();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, ex.Message);
                 return false;
             }
 
-            switch(askResult)
+            switch (askResult)
             {
-                case AskResult.CountOver:
-                    _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.GameOver, askResult));
-                    break;
-                case AskResult.Currect:
-                    _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.GameOver, askResult));
-                    break;
-                case AskResult.WaitNext:
-                    _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(GameStatus.Gaming, askResult));
-                    break;
+                case AskResult.CountOver:   notifyGameStatus(GameStatus.GameOver, askResult); break;
+                case AskResult.Currect:     notifyGameStatus(GameStatus.GameOver, askResult); break;
+                case AskResult.WaitNext:    notifyGameStatus(GameStatus.Gaming, askResult); break;
             }
 
+            notifyGameRemainCount(_remainCount);
             return askResult is not AskResult.Fail;
         }
         public void Surrender()
@@ -136,38 +130,61 @@ namespace Wordle
                 throw new NullReferenceException(nameof(_words));
             if (_selectedWord is null)
                 throw new NullReferenceException(nameof(_selectedWord));
+            //if (!_lstCharModels.Any())
+            //    throw new InvalidOperationException($"EmptyList: {_lstCharModels}");
 
-            WordleLineModel lastWordleLineModel = _wordleLinesRegion.Views.Cast<WordleLineModel>().Last();
-            if (lastWordleLineModel.CharacterModels.Any(m => m.Character == ' '))
+            var targetCharacterModels = _lstCharModels.Last();
+            if (targetCharacterModels.Any(m => m.Character == ' '))
                 return AskResult.WaitNext;
 
-            foreach((WordleLineCharacterModel charModel, char selectedChar) in lastWordleLineModel.CharacterModels.Zip(_selectedWord))
-            {
-                if (charModel.DropedCharModel == null)
-                    throw new NullReferenceException(nameof(charModel.DropedCharModel));
+            StringBuilder sbNextPrint = new StringBuilder();
 
+            foreach ((WordleLineCharacterModel charModel, char selectedChar) in targetCharacterModels.Zip(_selectedWord))
+            {
                 if (charModel.Character == selectedChar)
                 {
                     // CurrectChar
                     charModel.IsCurrected = true;
-                    charModel.IsPrinted = true;
+                    sbNextPrint.Append(charModel.Character);
                 }
-                else if(_selectedWord.Contains(charModel.Character))
+                else if (_selectedWord.Contains(charModel.Character))
                 {
                     // ExistChar
                     charModel.IsExisted = true;
+                    sbNextPrint.Append(' ');
                 }
                 else
                 {
                     // Nothing
-                    charModel.IsExepted = true;
+                    charModel.IsExepted = false;
+                    sbNextPrint.Append(' ');
                 }
             }
 
-            if (lastWordleLineModel.CharacterModels.Any(m => m.IsExisted || m.IsExepted))
-                return AskResult.WaitNext;
+            --_remainCount;
 
-            return AskResult.Currect;
+            bool isAllCurrected = !targetCharacterModels.Any(m => !m.IsCurrected);
+            if(isAllCurrected)
+            {
+                return AskResult.Currect;
+            }
+            else if(_remainCount <= 0)
+            {
+                printWord("End!");
+                return AskResult.CountOver;
+            }
+            else
+            {
+                string currectedChars = sbNextPrint.ToString();
+                var lineCharModels = currectedChars.Select(currectedChar =>
+                {
+                    bool isPrint = currectedChar != ' ';
+                    return new WordleLineCharacterModel { Character = currectedChar, IsPrinted = isPrint, IsCurrected = isPrint };
+                }).ToArray(); // Caution
+
+                printWord(lineCharModels);
+                return AskResult.WaitNext;
+            }
         }
         private bool loadWords()
         {
@@ -186,18 +203,42 @@ namespace Wordle
             int selectionIndex = _rand.Next(_words.Length);
             _selectedWord = _words[selectionIndex].ToUpper();
         }
-        private void printWord(string word,bool isReadonly = true)
+        private void printWord(string word,bool isNotice = true)
         {
-            if (String.IsNullOrEmpty(word))
-                throw new NullReferenceException(nameof(word));
+            ArgumentNullException.ThrowIfNull(word, nameof(word));
 
-            if (isReadonly)
+            if (isNotice)
                 _wordleLinesRegion.RemoveAll();
 
+            var charModels = word.Select(ch => new WordleLineCharacterModel { Character = ch, IsPrinted = isNotice }).ToArray();
+            printWord(charModels);
+        }
+        private void printWord(IEnumerable<WordleLineCharacterModel> wordleLineModels)
+        {
+            ArgumentNullException.ThrowIfNull(wordleLineModels, nameof(wordleLineModels));
+            if (!wordleLineModels.Any())
+                throw new ArgumentOutOfRangeException($"EmptyArray: {wordleLineModels}");
+            if (_wordleLinesRegion is null)
+                throw new NullReferenceException(nameof(_wordleLinesRegion));
+
+            // ChangeToReadOnly-LastWordleLine
+            if (_lstCharModels.Any())
+            {
+                foreach (var charModel in _lstCharModels.Last())
+                {
+                    charModel.IsPrinted = true;
+                }
+            }
+
+            _lstCharModels.Add(wordleLineModels);
+
             WordleLineModel lineModel = new WordleLineModel();
-            lineModel.CharacterModels = word.Select(ch => new WordleLineCharacterModel { Character = ch, IsPrinted = isReadonly }).ToArray();
+            lineModel.SetCharacterModels(wordleLineModels);
 
             _wordleLinesRegion.Add(lineModel);
         }
+
+        private void notifyGameStatus(GameStatus gameStatus, AskResult askResult) => _gameStatusChangedEvent.Publish(new GameStatusChangedEventArgs(gameStatus, askResult));
+        private void notifyGameRemainCount(int remainCount) => _gameRemainCountChangedEvent.Publish(new GameRemainCountChangedEventArgs(remainCount));
     }
 }

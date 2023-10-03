@@ -35,6 +35,7 @@ namespace Wordle
             regionMgr.RegisterViewWithRegion<WordleLineView>(WellknownRegionNames.WordleLineViewRegion);
             regionMgr.RegisterViewWithRegion<WordleKeypadView>(WellknownRegionNames.WordleKeypadViewRegion);
             regionMgr.RegisterViewWithRegion<WordleControlView>(WellknownRegionNames.WordleControlViewRegion);
+            regionMgr.RegisterViewWithRegion<WordleStateView>(WellknownRegionNames.WordleStateViewRegion);
 
             IWordleService wordleSvc = Container.Resolve<IWordleService>();
             await wordleSvc.InitializeAsync();

@@ -15,5 +15,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+    
     <ContentControl prism:RegionManager.RegionName="{x:Static local:WellknownRegionNames.MainViewRegion}"/>
 </Window>
